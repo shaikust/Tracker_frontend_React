@@ -33,18 +33,40 @@ public ResponseEntity<List<Parcel>> getAllParcel() {
   }
 }
   public ResponseEntity<String> addParcel(Parcel parcel) {
-    try {
-      parcelRepository.save(parcel);
-      Tracking tracking=new Tracking();
-      tracking.setParcel(parcel);
-      tracking.setCurrentLocation(parcel.getSenderLocation());
-      trackingRepository.save(tracking);
-      logger.info("new parcel added");
-      return new ResponseEntity<String>("["+parcel.getId()+"]"+"parcel added successfully",HttpStatus.OK);
-    }catch (Exception e){
+//      Optional<Parcel> existingParcel = parcelRepository.findById(parcel.getId());
+//      if (existingParcel != null) {
+//          return new ResponseEntity<String>("Parcel with ID [" + parcel.getId() + "] already exists", HttpStatus.BAD_REQUEST);
+//      }
+//    try {
+//      Parcel parcel1=new Parcel();
+//      parcel1.setId(parcel.getId());
+//      parcel1.setReceiverLocation(parcel.getSenderLocation());
+//      parcel1.setSenderLocation(parcel.getSenderLocation());
+//      parcel1.setDeliveryStatus(parcel.getDeliveryStatus());
+//      parcel1.setCreatedBy(parcel.getCreatedBy());
+//      parcelRepository.save(parcel1);
+//      Tracking tracking=new Tracking();
+//      tracking.setParcel(parcel);
+//      tracking.setCurrentLocation(parcel.getSenderLocation());
+//      trackingRepository.save(tracking);
+//      logger.info("new parcel added");
+//      return new ResponseEntity<String>("["+parcel.getId()+"]"+"parcel added successfully",HttpStatus.OK);
+//    }catch (Exception e){
+//
+//      return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+//    }
+//    if(parcelRepository.exitsById(parcel.getId())){
+//      logger.error("{} parcelId is already taken",parcel.getId());
+//      return new ResponseEntity<>(parcel.getId()+" "+"parcelId  is already taken", HttpStatus.BAD_REQUEST);
+//    }
+    parcelRepository.save(parcel);
+    Tracking tracking=new Tracking();
+    tracking.setParcel(parcel);
+    tracking.setCurrentLocation(parcel.getSenderLocation());
+    trackingRepository.save(tracking);
+    logger.info("new parcel added");
+    return new ResponseEntity<String>("["+parcel.getId()+"]"+"parcel added successfully",HttpStatus.OK);
 
-      return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-    }
 
   }
   public  ResponseEntity<Tracking> getParcel(Integer trackingId) {
@@ -64,7 +86,7 @@ public ResponseEntity<String> updateParcel(Integer trackingId, Parcel parcel) {
     parcel1.setDeliveryStatus(parcel.getDeliveryStatus());
     parcelRepository.save(parcel1);
     logger.info("parcel updated");
-    return new ResponseEntity<String>("updated successfully", HttpStatus.OK);
+    return new ResponseEntity<String>("parcel "+"["+trackingId+"]"+"updated successfully", HttpStatus.OK);
   }catch (Exception e){
     return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
 
@@ -77,7 +99,7 @@ public ResponseEntity<String> updateParcel(Integer trackingId, Parcel parcel) {
       Parcel parcel=parcelRepository.findById(trackingId).orElseThrow(()->new ResourceNotFoundException("parcel","trackingId",trackingId));
       parcelRepository.delete(parcel);
       logger.info("parcel deleted with given id");
-    return new ResponseEntity<>("deleted successfully",HttpStatus.OK);
+    return new ResponseEntity<>("parcel "+"["+trackingId+"]"+"deleted successfully",HttpStatus.OK);
 
     }catch (Exception e){
       return  new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);

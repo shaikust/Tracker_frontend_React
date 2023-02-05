@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "parcel")
+@Table(name = "parcel",uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"parcelId"})})
 public class Parcel {
   @Id
     @Column(name = "parcelId")
@@ -18,8 +19,8 @@ public class Parcel {
   private String receiverLocation;
   private String createdBy;
   private String deliveryStatus;
-  @OneToOne(mappedBy = "parcel")
-  private Tracking tracking;
+//  @OneToOne(mappedBy = "parcel")
+//  private Tracking tracking;
 
 
 //  @OneToOne(cascade = CascadeType.ALL)
